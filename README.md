@@ -1,6 +1,7 @@
 # Cosc 310 Individual Project Jesse Plamondon
+Repo: https://github.com/jesseplamondon/310IndividualProject.git
 
-For our project, which has been done in Java, the user takes on the role of an interviewer and the agent takes on the role of an interviewee for a software engineering job. The user prompts the agent by asking questions related to their history, experience, etc. and the agent responds with a relevant answer. The software we developed utilizes Named Entity Recognition, Coreference Resolution, SpellCheck and POS Tagging to identify various structures within user input phrases to respond appropriately. The software utilizes a minimalistic User Interface which allows users to easily enter interview-based phrases and receive responses that are cohesive to an interviewee.
+For my individual project, which has been done in Java, the user takes on the role of an interviewer and the agent takes on the role of an interviewee for a software engineering job. The user prompts the agent by asking questions related to their history, experience, etc. and the agent responds with a relevant answer. The software developed utilizes Named Entity Recognition, Coreference Resolution, SpellCheck, Wikipedia API (jwiki), Language Translation and POS Tagging to identify various structures within user input phrases to respond appropriately. The software utilizes a minimalistic User Interface which allows users to easily enter interview-based phrases and receive responses that are cohesive to an interviewee.
 
 ## Added Features
 
@@ -52,3 +53,5 @@ Generalized method:
 * Download the CoreNLP zip file from: https://stanfordnlp.github.io/CoreNLP/ and extract
 * Reference all of the jars to the class path of the Java project
 
+### Jwiki
+After including the CoreNLP API, include the jwiki jar file found in this repository into the classpath of the Java Project.
