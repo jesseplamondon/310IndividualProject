@@ -34,7 +34,7 @@ public class UI extends Application {
 	@Override
 	public void start(Stage stage){
 		try {
-			cb = new ChatBot("Mitch");
+			cb = new ChatBot("Mitch", "en");
 			textfield = new TextField();
 			send = new Button("Send");
 			send.setDefaultButton(true);
@@ -43,7 +43,6 @@ public class UI extends Application {
 					textfield.setText("");
 				}
 				else {
-					System.out.println(textfield.getText());
 					text = new Text();
 					text.setWrappingWidth(WIDTH);
 					text.setFill(Color.GREEN);
@@ -57,6 +56,7 @@ public class UI extends Application {
 					var ans = cb.sendPhrase(textfield.getText());
 					var phrase = textfield.getText();
 					String ner = cb.NER(phrase,ans);
+					System.out.println(ner);
 					text.setText("Bot: " + ner);
 					textbox.getChildren().add(text);
 					textfield.setText("");

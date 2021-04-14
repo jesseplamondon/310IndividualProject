@@ -20,7 +20,10 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage){
-		try {
+		
+		UI ui = new UI();
+		ui.start(primaryStage);
+		/*try {
 			Text textarea = new Text();
 			
 			TextField textfield = new TextField();
@@ -52,7 +55,7 @@ public class Main extends Application {
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	@Override
@@ -62,5 +65,6 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		Application.launch(args);
+		
 	}
 }

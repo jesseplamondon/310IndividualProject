@@ -12,5 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/coreNLP"/>
+	<classpathentry kind="lib" path="C:/Users/jesse/Desktop/310IndividualProject/310IndividualProject/JWiki.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

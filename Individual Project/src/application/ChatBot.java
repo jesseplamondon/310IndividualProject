@@ -36,6 +36,7 @@ import edu.stanford.nlp.pipeline.*;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import Jwiki.Jwiki;
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.MentionsAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations.NamedEntityTagAnnotation;
@@ -47,22 +48,32 @@ public class ChatBot {
     String name;
     String phrases = "";
     static int counter = 0;
+    String userLang = "en";
+    Properties props = new Properties();
+    StanfordCoreNLP pipelinePhrase;
+    StanfordCoreNLP pipelineAns;
     
-    public ChatBot(String name){
+    public ChatBot(String name, String userLang){
         this.name = name;
+        this.userLang = userLang;
+        props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner");
+         pipelinePhrase = new StanfordCoreNLP(props);
+         pipelineAns= new StanfordCoreNLP(props);
     };
     public String sendPhrase(String phrase){
-        phrase=dataClean(phrase);
 
         String ans = "";
-        phrase = translate(phrase, "en", "fr");
+        if(userLang!="en") {
+        	phrase = translate(phrase, userLang, "en");
+        }
+        phrase=dataClean(phrase);
+        System.out.println("phrase" + phrase);
         String[] stringArray = phrase.split(" ");
 
         // Send phrase to the POS tagger; Returns an ArrayList of possible keywords
         ArrayList<String> list = pos(phrase);
         String[] taggedData = new String[list.size()];
         taggedData = list.toArray(taggedData);
-
         // Loop to find first keyword
         for(int i = 0; i< taggedData.length; i++){
             // If the first keyword is found call search() to find second keyword
@@ -112,6 +123,7 @@ public class ChatBot {
 
       //If none of the keywords were found look in the miscellaneous csv for generic questions
       if(ans.length()==0){
+    	  System.out.println(stringArray + "SA");
           ans=search("miscellaneous", stringArray);
       }
       //If the ansswer is still empty no keywords were found
@@ -120,7 +132,7 @@ public class ChatBot {
 
   public String search(String keyword, String[] stringArray){
       //String csvPath="C:\\Users\\Brandon\\Desktop\\csvs\\" + keyword + ".csv";
-      String csvPath="C:\\Users\\Jesse\\Desktop\\Files\\SchoolFiles\\ThirdYear\\Assignment_02\\csvs\\" + keyword + ".csv";
+      String csvPath="C:\\Users\\Jesse\\Desktop\\310IndividualProject\\310IndividualProject\\Individual Project\\csvs\\" + keyword + ".csv";
       ArrayList<String> data = new ArrayList<String>();
       String row = "";
       boolean breakOut = false;
@@ -145,10 +157,11 @@ public class ChatBot {
               }
           }
           if(breakOut==true)
-              break;
-          if(j==stringArray.length-1)
-              ans = "Could you be a little more specific please?";
-      }
+              break;      
+          }
+      if(ans.length()==0)
+          ans = "Could you be a little more specific please?";
+
       return ans;
   }
 
@@ -158,6 +171,12 @@ public class ChatBot {
       return cleanedPhrase;
   };
 
+  	public String wiki(String phrase) {
+  		Jwiki jwiki = new Jwiki(phrase);
+		String[] sentences = (String[]) jwiki.getExtractText().split("\\.");
+		System.out.println(sentences[0] + ".");
+		return sentences[0];
+  	}
     
     
   	public String translate(String text, String langFrom, String langTo)  {
@@ -177,7 +196,9 @@ public class ChatBot {
             response.append(inputLine);
         }
         in.close();
-        return response.toString();}
+        String res = response.toString();  
+        res=res.replace("&#39;", "'").replace("Ã©", "é").replace("Ã¨", "è");
+        return res;}
   		catch(Exception err) {
   			System.out.print(err);
   			return "";  		}
@@ -231,12 +252,6 @@ public class ChatBot {
     }
 
     String NER(String phrase, String ans) {
-
-        Properties props = new Properties();
-        props.setProperty("annotators", "tokenize,ssplit,pos,lemma,ner");
-        
-        StanfordCoreNLP pipelinePhrase = new StanfordCoreNLP(props);
-        StanfordCoreNLP pipelineAns = new StanfordCoreNLP(props);
         Annotation annotationPhrase = new Annotation(phrase);
         Annotation annotationAns = new Annotation(ans);
         pipelinePhrase.annotate(annotationPhrase);
@@ -251,8 +266,12 @@ public class ChatBot {
         		if(custNERClassAns == custNERClassPhrase) {
         			ans = ans.replaceAll(multiWordAns.toString(), multiWordPhrase.toString());
         		}
+        		if(custNERClassAns.equals("PERSON")||custNERClassAns.equals("COUNTRY")) {
+    				ans+= " More info on " + multiWordPhrase.toString()+ ": " +wiki(multiWordPhrase.toString().toLowerCase()) + ".";
+    			}
         	}
         }
-      return ans;
+        if(userLang!="en") {return translate(ans, "en", userLang);}
+        return ans;
     }
 }
