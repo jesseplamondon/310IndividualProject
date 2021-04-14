@@ -180,7 +180,7 @@ public class ChatBot {
     
     
   	public String translate(String text, String langFrom, String langTo)  {
-  		String webAppUrl = "https://script.google.com/macros/s/AKfycbwRrN0TLWm-Ph9u_nvRFlLxm5gCG3Uvm-ZpFyi8UiIFVoxpZlbXNezPBfgG9sKgKh8Y/exec";
+  		String webAppUrl = "https://script.google.com/macros/s/AKfycbwrazV1jr40DPVw_zQjKDedioI9MvXt_iJfU9x3h_t4pdT0l_K1RS_CaqsyuTtqwRJc/exec";
   		try {
   		String urlStr = webAppUrl +
                 "?q=" + URLEncoder.encode(text, "UTF-8") +
@@ -197,10 +197,10 @@ public class ChatBot {
         }
         in.close();
         String res = response.toString();  
-        res=res.replace("&#39;", "'").replace("Ã©", "é").replace("Ã¨", "è");
+        res=res.replace("&#39;", "'").replace("Ã©", "é").replace("Ã¨", "è").replace("Ãª", "ê").replace("Ã®", "î");        
         return res;}
   		catch(Exception err) {
-  			System.out.print(err);
+  			System.out.print(err+ "err");
   			return "";  		}
   	}
 
@@ -266,7 +266,7 @@ public class ChatBot {
         		if(custNERClassAns == custNERClassPhrase) {
         			ans = ans.replaceAll(multiWordAns.toString(), multiWordPhrase.toString());
         		}
-        		if(custNERClassAns.equals("PERSON")||custNERClassAns.equals("COUNTRY")) {
+        		if(custNERClassAns.equals("PERSON")||custNERClassAns.equals("COUNTRY")||custNERClassAns.equals("ORGANIZATION")) {
     				ans+= " More info on " + multiWordPhrase.toString()+ ": " +wiki(multiWordPhrase.toString().toLowerCase()) + ".";
     			}
         	}
